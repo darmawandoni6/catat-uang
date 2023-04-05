@@ -1,0 +1,20 @@
+@import '../../../assets/styles/variable';
+
+.container {
+  width: 100%;
+  i {
+    margin-right: 12px;
+  }
+  background-color: white;
+  padding: 24px 10px 10px 10px;
+  .btnFixed {
+    width: 100%;
+    border-radius: 30px;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 20px;
+    color: $primary;
+    border: 1px solid $primary;
+    padding: 11px 22px;
+  }
+}
