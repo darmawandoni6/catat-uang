@@ -3,8 +3,8 @@
   "background_color": "#03a651",
   "display": "standalone",
   "start_url": "/",
-  "name": "Tracking Money",
-  "short_name": "Tracking Money",
+  "name": "Catat Uangku",
+  "short_name": "Catat Uang",
   "description": "Aplikasi pelacak keuangan",
   "icons": [
     {
