@@ -20,6 +20,6 @@ Aplikasi [Catat Uang](https://catat-uangku.vercel.app/) ini dibuat untuk keperlu
 
 Link Aplikasi https://catat-uangku.vercel.app/
 
-![](https://raw.githubusercontent.com/darmawandoni6/catat-uang/master/public/image1.png)
-![](https://raw.githubusercontent.com/darmawandoni6/catat-uang/master/public/image2.png)
-![](https://raw.githubusercontent.com/darmawandoni6/catat-uang/master/public/image3.png)
+![](https://raw.githubusercontent.com/darmawandoni6/catat-uang/fix-1/public/image1.png)
+![](https://raw.githubusercontent.com/darmawandoni6/catat-uang/fix-1/public/image2.png)
+![](https://raw.githubusercontent.com/darmawandoni6/catat-uang/fix-1/public/image3.png)
