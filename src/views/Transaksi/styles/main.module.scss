@@ -5,6 +5,22 @@
   max-width: $screen;
   height: 100vh;
   position: relative;
+  .sisaUang {
+    padding: 0px 18px;
+    font-weight: 700;
+    font-size: 12px;
+    line-height: 36px;
+    height: 36px;
+    text-align: right;
+    span {
+      color: $primary;
+    }
+    &.minus {
+      span {
+        color: $danger;
+      }
+    }
+  }
   .top {
     height: 175px;
     position: relative;

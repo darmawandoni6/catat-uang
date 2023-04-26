@@ -8,6 +8,8 @@ import path from 'src/constants/path';
 import Jubutron from 'src/components/Jubutron';
 import ButtonAdd from 'src/components/ButtonAdd';
 import localName from 'src/constants/localName';
+import cx from 'classnames';
+import { getCurrencyString } from 'src/helpers/curency';
 
 const Transaksi = () => {
   const [list, setList] = React.useState([]);
@@ -48,6 +50,18 @@ const Transaksi = () => {
     }
     setList(filter);
   };
+
+  const grandTotal = (nominal) => {
+    const { uangMasuk, uangKeluar } = nominal;
+
+    const sisa = uangMasuk - uangKeluar;
+
+    return {
+      minus: sisa < 0,
+      uang: Math.abs(sisa),
+    };
+  };
+
   return (
     <div className={style.container}>
       <Jubutron
@@ -66,6 +80,9 @@ const Transaksi = () => {
       />
       <ButtonAdd text="TRANSAKSI" handleClick={handleBtnTrasaksi} />
       <Filter handleChange={handleChange} />
+      <div className={cx(style.sisaUang, { [style.minus]: grandTotal(nominal).minus })}>
+        Sisa Uang : <span>{getCurrencyString(grandTotal(nominal).uang)}</span>
+      </div>
       <List data={list} />
     </div>
   );
