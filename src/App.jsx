@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import path from './constants/path';
 import Footer from './components/Footer';
 import useServiceWorker from './helpers/useServiceWorker';
@@ -23,7 +23,7 @@ const App = () => {
     <BrowserRouter>
       <React.Suspense fallback={<div />}>
         <Routes>
-          <Route path="/" element={<HutangPiutang />} />
+          <Route path="/" element={<Navigate to={path.hutangPiutang} />} />
           <Route
             path={`${path.hutangPiutang}/*`}
             element={
