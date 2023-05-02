@@ -10,15 +10,10 @@ import { listData } from '../HutangPiutang/helpers/array';
 import path from 'src/constants/path';
 import { getCurrencyString, getValue } from 'src/helpers/curency';
 
-const userAnonim = {
-  id: -1,
-  name: 'Anonim',
-};
-
 const AddTransaksi = () => {
   const [toogle, settoogle] = React.useState(['Utang Saya', 'Utang Pelanggan']);
   const [isUtangSaya, setIsUtangSaya] = React.useState(true);
-  const [user, setUser] = React.useState(userAnonim);
+  const [user, setUser] = React.useState();
   const [detailUser, setDetailUser] = React.useState();
   const [payload, setPayload] = React.useState({
     nominal: 0,
@@ -50,6 +45,11 @@ const AddTransaksi = () => {
   };
 
   const handleSubmit = () => {
+    if (!user) {
+      alert('saveData => user wajib');
+      return;
+    }
+
     if (payload.nominal === 0) {
       alert('Nominal transaksi tidak boleh 0');
       return;
@@ -109,7 +109,7 @@ const AddTransaksi = () => {
       </header>
       <section>
         <button className={style.choice} onClick={handleChoice}>
-          {user.id >= 0 ? (
+          {user ? (
             user.name
           ) : (
             <>
