@@ -21,8 +21,6 @@ const isLocalhost = Boolean(
 );
 
 export function register(config) {
-  console.log(isLocalhost);
-
   if ('serviceWorker' in navigator) {
     // if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
     // The URL constructor is available in all browsers that support SW.
@@ -106,8 +104,6 @@ function checkValidServiceWorker(swUrl, config) {
     headers: { 'Service-Worker': 'script' },
   })
     .then((response) => {
-      console.log(response);
-
       // Ensure service worker exists, and that we really are getting a JS file.
       const contentType = response.headers.get('content-type');
       if (
