@@ -1,6 +1,6 @@
 {
   "name": "catat-uangku",
-  "version": "0.1.0",
+  "version": "1.1.1",
   "private": true,
   "dependencies": {
     "classnames": "^2.3.2",
@@ -34,6 +34,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "build:test": "GENERATE_SOURCEMAP=false react-scripts build",
     "build": "GENERATE_SOURCEMAP=false react-scripts build",
     "prettier:write": "prettier --write \"./**/*.{js,jsx,ts,tsx,css,scss,html,md,mdx,json}\" --config ./.prettierrc --ignore-path ./.prettierignore"
   },

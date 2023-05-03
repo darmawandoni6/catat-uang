@@ -14,7 +14,7 @@ const App = () => {
   const { waitingWorker, showReload, reloadPage } = useServiceWorker();
 
   React.useEffect(() => {
-    if (showReload && waitingWorker && confirm('Update your Page ?')) {
+    if (showReload && waitingWorker) {
       reloadPage();
     }
   }, [waitingWorker, showReload]);
