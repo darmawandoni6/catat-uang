@@ -4,6 +4,7 @@ import UpdateProfile from './components/UpdateProfile';
 import { Link } from 'react-router-dom';
 import path from 'src/constants/path';
 import localName from 'src/constants/localName';
+
 import { getData } from 'src/helpers/localStorage';
 
 const list = [
@@ -27,6 +28,7 @@ const list = [
 ];
 
 const Profile = () => {
+  const [version, setVersion] = React.useState();
   const [profile, setProfile] = React.useState({});
   const [updateProfile, setUpdateProfile] = React.useState(false);
 
@@ -38,6 +40,8 @@ const Profile = () => {
   };
   React.useEffect(() => {
     handleProfile();
+    const { version } = require('../../../package.json');
+    setVersion(`Version ${version}`);
   }, []);
 
   const handleGo = ({ label, type }) => {
@@ -88,6 +92,9 @@ const Profile = () => {
         onClose={() => setUpdateProfile(false)}
         update={handleProfile}
       />
+      <footer>
+        <p>{version}</p>
+      </footer>
     </div>
   );
 };

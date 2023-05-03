@@ -10,7 +10,8 @@ export const listData = () => {
     let uangKeluar = 0;
 
     transaksi.forEach((item) => {
-      const title = moment(item.tgl).format('DD MMM YYYY');
+      const dt = item.tgl ?? item.date;
+      const title = moment(dt).format('DD MMM YYYY');
       if (item.isPengeluaran) {
         uangKeluar += item.nominal;
       } else {

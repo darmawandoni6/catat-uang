@@ -6,6 +6,7 @@
   margin: auto;
   max-width: $screen;
   background: white;
+  position: relative;
   header {
     background-color: $primary;
     padding: 18px;
@@ -62,6 +63,17 @@
           font-size: 18px;
         }
       }
+    }
+  }
+  footer {
+    position: fixed;
+    left: 0px;
+    bottom: 60px;
+    width: 100%;
+    p {
+      text-align: center;
+      margin: 10px 0px;
+      font-size: 12px;
     }
   }
 }

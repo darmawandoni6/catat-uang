@@ -4,13 +4,21 @@ import localName from 'src/constants/localName';
 import { getCurrencyString } from 'src/helpers/curency';
 import { getData } from 'src/helpers/localStorage';
 
-const Jubutron = ({ data }) => {
+const optFilter = ['Hari', 'Bulan', 'Tahun', 'Semua'];
+
+const Jubutron = ({ data, filterMoney, active }) => {
   const [name, setName] = React.useState('Saya');
 
   React.useEffect(() => {
     const profile = getData(localName.profile);
     if (profile) setName(profile.name);
   }, []);
+
+  React.useEffect(() => {}, [active]);
+
+  const handleFilter = (idx) => {
+    if (filterMoney) filterMoney(idx);
+  };
 
   return (
     <div className={style.top}>
@@ -34,6 +42,19 @@ const Jubutron = ({ data }) => {
                 <p>{data[1].label}</p>
               </div>
             </section>
+            {active >= 0 && (
+              <div className={style.filter}>
+                {optFilter.map((item, i) => (
+                  <button
+                    key={i}
+                    className={active === i ? style.active : ''}
+                    onClick={() => handleFilter(i)}
+                  >
+                    {item}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>

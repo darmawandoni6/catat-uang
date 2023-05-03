@@ -73,6 +73,19 @@
             }
           }
         }
+        .filter {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          gap: 2px;
+          button {
+            width: 60px;
+          }
+          .active {
+            color: $primary;
+            border-bottom: 1px solid $primary;
+          }
+        }
         footer {
           display: flex;
           align-items: center;

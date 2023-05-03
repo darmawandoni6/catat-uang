@@ -10,6 +10,7 @@ import ButtonAdd from 'src/components/ButtonAdd';
 import localName from 'src/constants/localName';
 import cx from 'classnames';
 import { getCurrencyString } from 'src/helpers/curency';
+import moment from 'moment/moment';
 
 const Transaksi = () => {
   const [list, setList] = React.useState([]);
@@ -17,16 +18,13 @@ const Transaksi = () => {
     uangMasuk: 0,
     uangKeluar: 0,
   });
+  const [filter, setFilter] = React.useState(1);
+
   const { pathname } = useLocation();
   const navigate = useNavigate();
 
   React.useEffect(() => {
-    const { list, uangMasuk, uangKeluar } = listData();
-    setNominal({
-      uangMasuk,
-      uangKeluar,
-    });
-    setList(Object.entries(list));
+    handleFilter(filter);
   }, []);
 
   const handleBtnTrasaksi = () => {
@@ -48,6 +46,7 @@ const Transaksi = () => {
         if (find[0]) filter.push([item[0], find]);
       });
     }
+
     setList(filter);
   };
 
@@ -60,6 +59,46 @@ const Transaksi = () => {
       minus: sisa < 0,
       uang: Math.abs(sisa),
     };
+  };
+
+  const handleFilter = (i) => {
+    let { list } = listData();
+    const data = Object.entries(list);
+    const hari = moment().format('DD MMM YYYY');
+    const bulan = moment().format('MMM YYYY');
+    const tahun = moment().format('YYYY');
+
+    let choice = '';
+    switch (i) {
+      case 0:
+        choice = hari;
+        break;
+      case 1:
+        choice = bulan;
+        break;
+      case 2:
+        choice = tahun;
+        break;
+
+      default:
+        break;
+    }
+
+    list = data.filter((item) => item[0].includes(choice));
+    let uangMasuk = 0;
+    let uangKeluar = 0;
+    list.forEach((element) => {
+      element[1].forEach((l) => {
+        if (l.isPengeluaran) uangKeluar += l.nominal;
+        else uangMasuk += l.nominal;
+      });
+    });
+    setNominal({
+      uangMasuk,
+      uangKeluar,
+    });
+    setList(list);
+    setFilter(i);
   };
 
   return (
@@ -76,7 +115,8 @@ const Transaksi = () => {
             value: nominal.uangKeluar,
           },
         ]}
-        route="/report-transaksi"
+        filterMoney={handleFilter}
+        active={filter}
       />
       <ButtonAdd text="TRANSAKSI" handleClick={handleBtnTrasaksi} />
       <Filter handleChange={handleChange} />
