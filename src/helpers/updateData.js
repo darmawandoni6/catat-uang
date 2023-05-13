@@ -3,7 +3,7 @@ import localName from 'src/constants/localName';
 
 export default {
   hutangPiutang: () => {
-    const data = getData(localName.hutangPiutang);
+    const data = getData(localName.hutangPiutang) ?? [];
     const filter = data.filter((item) => item.user.id === 0);
     filter.forEach((element) => {
       const idx = data.findIndex((item) => item.user.id === element.user.id);
