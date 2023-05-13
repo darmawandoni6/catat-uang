@@ -3,6 +3,7 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import path from './constants/path';
 import Footer from './components/Footer';
 import useServiceWorker from './helpers/useServiceWorker';
+import updateData from './helpers/updateData';
 const HutangPiutang = React.lazy(() => import('./views/HutangPiutang'));
 const AddHutangPiutang = React.lazy(() => import('./views/AddHutangPiutang'));
 const Profile = React.lazy(() => import('./views/Profile'));
@@ -12,6 +13,10 @@ const AddTransaksi = React.lazy(() => import('./views/AddTransaksi'));
 
 const App = () => {
   const { waitingWorker, showReload, reloadPage } = useServiceWorker();
+
+  React.useEffect(() => {
+    updateData.hutangPiutang();
+  }, []);
 
   React.useEffect(() => {
     if (showReload && waitingWorker) {
