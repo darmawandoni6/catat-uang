@@ -23,14 +23,14 @@ const Form = ({ onClose, user }) => {
     let err = false;
 
     if (!pelanggan[0]) {
-      pelanggan.push({ id: 0, ...payload });
+      pelanggan.push({ id: 1, ...payload });
     } else {
       const find = pelanggan.find((item) => item.phone === payload.phone);
       if (find) {
         alert(`Nomor Pelanggan Sudah Terdaftar Sebagai ${find.name}`);
         err = true;
       } else {
-        pelanggan.push({ id: pelanggan.length, ...payload });
+        pelanggan.push({ id: pelanggan.length + 1, ...payload });
       }
     }
 
