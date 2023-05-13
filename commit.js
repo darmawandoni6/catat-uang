@@ -7,14 +7,8 @@ const exec = util.promisify(require('child_process').exec);
 const spawn = require('child_process').spawnSync;
 
 async function version(versionType) {
-  const { stdout, stderr } = await exec(`npm version ${versionType} --no-git-tag-version --force`);
+  const { stdout, stderr } = await exec(`npm version ${versionType}`);
   console.log('1', { stdout, stderr });
-  if (stderr) throw stderr;
-  return stdout;
-}
-
-async function branch() {
-  const { stdout, stderr } = await exec(`git rev-parse --abbrev-ref HEAD`);
   if (stderr) throw stderr;
   return stdout;
 }
@@ -29,8 +23,8 @@ const run = async () => {
     if (!gitMessage) throw new Error('You need to provide a git commit message!');
 
     await spawn('git', ['add .'], { stdio: 'inherit' });
-    console.log(1);
     await spawn('git', ['commit', '-m', gitMessage.trim()], { stdio: 'inherit' });
+    await version(versionType);
     await spawn('git', ['push'], { stdio: 'inherit' });
   } catch (err) {
     console.log(err);
