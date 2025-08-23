@@ -32,10 +32,10 @@ app.use("/api", routesGoogle);
 app.use("/api", routesTransaction);
 app.use("/api", routesMe);
 
-app.use(express.static(path.join(__dirname, "../../client/dist")));
+app.use(express.static(path.join(__dirname, "../client")));
 // fallback ke index.html (SPA routing)
-app.get("*", (_req, res) => {
-  res.sendFile(path.join(__dirname, "../../client/dist/index.html"));
+app.get(/.*/, (_req, res) => {
+  res.sendFile(path.join(__dirname, "../client/index.html"));
 });
 
 const PORT = 4000;
