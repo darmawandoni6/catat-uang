@@ -12,9 +12,9 @@ http.interceptors.response.use(
     const err = error as AxiosError<{ message: string }>;
 
     if (err.status === 401) {
-      window.location.href = '/login';
-    }
-    if (err.response?.data) {
+      window.location.replace('/login');
+      return;
+    } else if (err.response?.data) {
       err.message = err.response?.data?.message ?? err.message;
     }
 

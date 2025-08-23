@@ -34,7 +34,12 @@ app.use("/api", routesMe);
 
 app.use(express.static(path.join(__dirname, "../client")));
 // fallback ke index.html (SPA routing)
-app.get(/.*/, (_req, res) => {
+app.get(/.*/, (req, res) => {
+  if (req.path !== "/login" && !req.cookies["access-token"]) {
+    res.redirect(303, process.env.URL_CLIENT + "/login");
+    return;
+  }
+
   res.sendFile(path.join(__dirname, "../client/index.html"));
 });
 

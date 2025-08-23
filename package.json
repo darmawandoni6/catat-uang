@@ -12,7 +12,7 @@
     "build:server": "yarn --cwd server build",
     "build:client": "yarn --cwd client build",
     "copy-client": "rm -rf server/client && cp -r client/dist server/client",
-    "build": "yarn build:client && yarn build:server && yarn copy-client",
+    "build": "yarn build:server && yarn build:client",
     "start:server": "yarn --cwd server start",
     "start": "yarn start:server"
   },
