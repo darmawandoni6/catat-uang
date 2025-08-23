@@ -34,7 +34,7 @@ app.use("/api", routesMe);
 
 app.use(express.static(path.join(__dirname, "../client")));
 // fallback ke index.html (SPA routing)
-app.get(/.*/, (req, res) => {
+app.get("*", (req, res) => {
   // Kirim index.html untuk SPA route
   res.sendFile(path.join(__dirname, "../client/index.html"));
 });
