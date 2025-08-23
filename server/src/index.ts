@@ -35,11 +35,17 @@ app.use("/api", routesMe);
 app.use(express.static(path.join(__dirname, "../client")));
 // fallback ke index.html (SPA routing)
 app.get(/.*/, (req, res) => {
-  if (req.path !== "/login" && !req.cookies["access-token"]) {
-    res.redirect(303, process.env.URL_CLIENT + "/login");
-    return;
+  // Jangan redirect file statis
+  if (req.path.endsWith(".js") || req.path.endsWith(".css") || req.path.endsWith(".map")) {
+    return res.status(404).send("Not found"); // atau biarkan express.static handle
   }
 
+  // Auth check
+  if (req.path !== "/login" && !req.cookies["access-token"]) {
+    return res.redirect(303, "/login");
+  }
+
+  // Kirim index.html untuk SPA route
   res.sendFile(path.join(__dirname, "../client/index.html"));
 });
 
