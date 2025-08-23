@@ -38,13 +38,11 @@ app.get(/.*/, (_req, res) => {
   res.sendFile(path.join(__dirname, "../client/index.html"));
 });
 
-if (process.env.NODE_ENV !== "production") {
-  const PORT = 4000;
+const PORT = 4000;
 
-  app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
-  });
-}
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
+});
 
 export default app;
 
