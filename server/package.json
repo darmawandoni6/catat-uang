@@ -6,7 +6,7 @@
     "dev": "ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/index.ts",
     "migrate-dev": "npx prisma migrate dev --name",
     "clean": "rm -rf dist client",
-    "build": "yarn clean && tsc && tsc-alias",
+    "build": "yarn clean && prisma generate && tsc && tsc-alias",
     "start": "NODE_ENV=production node dist/index.js",
     "migrate-prod": "npx prisma migrate deploy"
   },
