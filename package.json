@@ -3,15 +3,17 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
+    "install:server": "yarn --cwd server install",
+    "install:client": "yarn --cwd client install",
+    "install:all": "yarn install:client && yarn install:server",
     "dev": "concurrently \"yarn dev:server\" \"yarn dev:client\"",
     "dev:server": "yarn --cwd server dev",
     "dev:client": "yarn --cwd client dev",
-    "build": "yarn build:client && yarn build:server",
     "build:server": "yarn --cwd server build",
     "build:client": "yarn --cwd client build",
-    "start": "yarn start:server",
-    "start:server": "yarn --cwd server start",
-    "copy-client": "rm -rf server/client && cp -r client/dist server/client"
+    "copy-client": "rm -rf server/client && cp -r client/dist server/client",
+    "build": "yarn build:client && yarn build:server && yarn copy-client",
+    "start": "yarn start:server"
   },
   "keywords": [],
   "author": "",
