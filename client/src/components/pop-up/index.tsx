@@ -1,61 +1,33 @@
 import type { ReactNode } from 'react';
-import { type FC, useState } from 'react';
+import { type FC } from 'react';
 
-import { Button } from '@component/ui/button';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@component/ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@component/ui/dialog';
 
 interface Props {
   open: boolean;
-  title: string;
-  description: string;
-  footer: {
-    no: string;
-    yes: string;
-  };
-  icon: ReactNode;
+  title?: string;
+  description?: string;
+  children: ReactNode;
+  footer?: ReactNode;
   onOpenChange: VoidFunction;
-  onReset?: () => Promise<void>;
 }
-const ModalDialog: FC<Props> = ({ open, title, description, footer, icon, onOpenChange, onReset }) => {
-  const [loading, setLoading] = useState<boolean>(false);
-
-  const handleCancel = () => {
-    if (loading) return;
-    onOpenChange();
-  };
-
-  const handleConfirm = async () => {
-    if (!onReset) return;
-    setLoading(true);
-    try {
-      await onReset();
-      handleCancel();
-    } finally {
-      setLoading(false);
-    }
-  };
-
+const ModalDialog: FC<Props> = ({ open, title, description, footer, children, onOpenChange }) => {
   return (
-    <Dialog open={open} onOpenChange={handleCancel}>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
-        <DialogHeader>
-          <DialogTitle className="text-center">
-            {icon}
-            {title}
-          </DialogTitle>
-          <DialogDescription className="text-center">
-            {description}
-
-            <div className="mt-4 flex justify-center gap-4">
-              <Button variant="outline" className="border" onClick={handleCancel}>
-                {footer.no}
-              </Button>
-              <Button variant="destructive" onClick={handleConfirm} loading={loading}>
-                {footer.yes}
-              </Button>
-            </div>
-          </DialogDescription>
+        <DialogHeader hidden={!title}>
+          <DialogTitle>{title}</DialogTitle>
+          <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
+        {children}
+        {footer && <DialogFooter className="gap-2 sm:gap-0">{footer}</DialogFooter>}
       </DialogContent>
     </Dialog>
   );

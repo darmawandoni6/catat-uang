@@ -13,7 +13,7 @@ import {
   Wallet,
 } from 'lucide-react';
 
-import ModalDialog from '@component/pop-up';
+import ModalDialog from '@component/pop-up/alert';
 import { Button } from '@component/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@component/ui/tabs';
 import { toastError, toastSuccess } from '@util/toast';

@@ -6,6 +6,7 @@ import { useSearchParams } from 'react-router-dom';
 import { Button } from '@component/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@component/ui/card';
 import { http } from '@util/network';
+import { toastError } from '@util/toast';
 
 const Login = () => {
   const [searchParams] = useSearchParams();
@@ -20,7 +21,8 @@ const Login = () => {
         .then(() => {
           window.location.href = '/';
         })
-        .finally(() => {
+        .catch(err => {
+          toastError(err);
           setIsLoading(false);
         });
     }
@@ -51,7 +53,7 @@ const Login = () => {
         <Card className="border-0 bg-white/80 shadow-xl backdrop-blur-sm max-sm:shadow-none">
           <CardHeader className="space-y-1 pb-4">
             <CardTitle className="text-center text-xl font-semibold">Masuk</CardTitle>
-            <CardDescription className="text-center">Pilih metode login yang Anda inginkan</CardDescription>
+            <CardDescription className="text-center">Silakan login dengan akun Gmail anda!</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             {/* Google Login Button */}

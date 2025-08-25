@@ -1,7 +1,11 @@
 {
   "name": "catat-uang",
   "version": "1.0.0",
-  "main": "index.js",
+  "private": "true",
+  "workspaces": [
+    "client",
+    "server"
+  ],
   "scripts": {
     "install:server": "yarn --cwd server install",
     "install:client": "yarn --cwd client install",
@@ -16,8 +20,28 @@
     "start:server": "yarn --cwd server start",
     "start": "yarn start:server"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "catat uang",
+    "budgeting",
+    "keuangan pribadi",
+    "pemasukan",
+    "pengeluaran",
+    "laporan keuangan",
+    "aplikasi keuangan",
+    "manajemen uang",
+    "uang masuk",
+    "uang keluar",
+    "financial tracker",
+    "personal finance",
+    "money management",
+    "budget planner",
+    "expense tracker"
+  ],
+  "author": {
+    "name": "Doni Darmawan",
+    "email": "jane.smith@example.com",
+    "url": "https://darmawan.netlify.app/"
+  },
   "license": "ISC",
   "description": "",
   "dependencies": {

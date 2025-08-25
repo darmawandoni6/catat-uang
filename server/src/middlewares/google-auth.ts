@@ -9,9 +9,9 @@ import { generateToken } from "@util/token";
 
 export const googleMiddleware = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    let jwtToken: string = req.cookies["access-token"];
-    let tokenAccess: string = req.cookies["google-access-token"];
-    let tokenRefresh: string = req.cookies["google-refresh-token"];
+    let jwtToken: string = String(req.cookies["access-token"]);
+    const tokenAccess: string = String(req.cookies["google-access-token"]);
+    const tokenRefresh: string = String(req.cookies["google-refresh-token"]);
 
     if (!tokenAccess || !tokenRefresh || !jwtToken || !jwtToken.startsWith("Bearer ")) {
       next(createHttpError.Unauthorized());

@@ -1,4 +1,4 @@
-import { Credentials } from "google-auth-library";
+import type { Credentials } from "google-auth-library";
 
 import { prisma } from "@config/prisma";
 import type { Prisma, Users } from "@prisma/client";
@@ -27,7 +27,7 @@ export const getUserData = async (tokens: Credentials): Promise<string> => {
   const response = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
     headers: { Authorization: `Bearer ${tokens.access_token}` },
   });
-  const data: { email: string; sub: string; name: string } = await response.json();
+  const data = (await response.json()) as { email: string; sub: string; name: string };
 
   const isFind = await isCheckedUser(data.sub);
   if (!isFind) {

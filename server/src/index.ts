@@ -4,9 +4,11 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import dotenv from "dotenv";
+import morgan from "morgan";
 import path from "path";
 
 import { prisma } from "@config/prisma";
+import { errorHandler, methodNotAllowed } from "@middleware/error-middleware";
 
 import { routes as routesGoogle } from "./features/auth/auth-route";
 import { routes as routesMe } from "./features/me/me-route";
@@ -24,6 +26,26 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 
+if (process.env.NODE_ENV === "development") {
+  app.use(morgan("dev"));
+} else {
+  app.use(
+    morgan(
+      (tokens, req, res) => {
+        return JSON.stringify({
+          method: tokens.method(req, res),
+          url: tokens.url(req, res),
+          status: Number(tokens.status(req, res)),
+          response_time: Number(tokens["response-time"](req, res)),
+          timestamp: new Date().toISOString(),
+        });
+      },
+      {
+        skip: (req) => !req.url.startsWith("/api"), // Hanya log request yang mulai dengan /api
+      }
+    )
+  );
+}
 app.get("/api", (req: Request, res: Response) => {
   res.json({ message: "Hello from Express + TypeScript 🚀" });
 });
@@ -32,13 +54,17 @@ app.use("/api", routesGoogle);
 app.use("/api", routesTransaction);
 app.use("/api", routesMe);
 
-app.use(express.static(path.join(__dirname, "../client")));
-// fallback ke index.html (SPA routing)
-app.get("*", (req, res) => {
-  // Kirim index.html untuk SPA route
-  res.sendFile(path.join(__dirname, "../client/index.html"));
-});
+app.use("/api", methodNotAllowed);
+app.use("/api", errorHandler);
 
+// if (process.env.NODE_ENV !== "development") {
+//   app.use(express.static(path.join(__dirname, "../client")));
+//   // fallback ke index.html (SPA routing)
+//   app.get("*", (req, res) => {
+//     // Kirim index.html untuk SPA route
+//     res.sendFile(path.join(__dirname, "../client/index.html"));
+//   });
+// }
 const PORT = 4000;
 
 app.listen(PORT, () => {
