@@ -1,15 +1,10 @@
 {
   "version": 2,
-  "builds": [
-    { "src": "api/index.ts", "use": "@vercel/node" },
-    { "src": "client/dist/**", "use": "@vercel/static" }
-  ],
-  "routes": [
-    { "src": "/api/(.*)", "dest": "/api/index.ts" },
-    { "src": "/assets/(.*)", "dest": "/client/dist/assets/$1" },
-    { "src": "/favicon.ico", "dest": "/client/dist/favicon.ico" },
-    { "src": "/(.*)", "dest": "/client/dist/index.html" }
-  ],
   "installCommand": "yarn install:all",
-  "buildCommand": "yarn build"
+  "buildCommand": "yarn build",
+  "outputDirectory": "client/dist",
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "/api/index.ts" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
 }

@@ -30,10 +30,11 @@ const defaultState: TransactionForm = {
 };
 
 interface Props {
+  onUpdateBalance: (type: 'income' | 'expense', value: number) => void;
   onRefresh: VoidFunction;
 }
 
-const FormTransaksi: FC<Props> = ({ onRefresh }) => {
+const FormTransaksi: FC<Props> = ({ onRefresh, onUpdateBalance }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
   const [formData, setFormData] = useState<TransactionForm>(defaultState);
@@ -57,6 +58,7 @@ const FormTransaksi: FC<Props> = ({ onRefresh }) => {
       };
       await createTransaksi(payload);
       onRefresh();
+      onUpdateBalance(formData.type, payload.amount);
       toast.success('success create');
       setFormData(defaultState);
       handleOpenChange();

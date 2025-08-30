@@ -13,6 +13,7 @@ import {
   Wallet,
 } from 'lucide-react';
 
+import Loading from '@component/loading';
 import ModalDialog from '@component/pop-up/alert';
 import { Button } from '@component/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@component/ui/tabs';
@@ -24,11 +25,15 @@ import Grafik from './_components/grafik';
 import ListTransaksi from './_components/list-transaksi';
 import Statistik from './_components/statistik';
 import TotalCard from './_components/total-card';
-import { dashboardTransaksi, getMe, listTransaksi, logout, remove } from './repository/api';
-import type { DashboardTransaction, FilterReport, Me, TransactionList, TransactionsParams } from './types';
+import useGetMe from './hooks/useGetMe';
+import { dashboardTransaksi, listTransaksi, logout, remove } from './repository/api';
+import type { DashboardTransaction, FilterReport, TransactionList, TransactionsParams } from './types';
 import { getGreeting } from './utils/time';
 
 const Home = () => {
+  const { me, summary, getMe, handleUpdateBalance } = useGetMe();
+
+  const [isLoading, setLoading] = useState<boolean>(false);
   const [reportFilters, setReportFilters] = useState<FilterReport>('month');
   const [dt, setDt] = useState<DashboardTransaction>({
     grafik: {},
@@ -37,18 +42,7 @@ const Home = () => {
       totalType: {},
     },
   });
-  const [{ me, summary }, setMe] = useState<Me>({
-    me: {
-      sub: '',
-      email: '',
-      name: '',
-    },
-    summary: {
-      totalIncome: 0,
-      totalExpense: 0,
-      balance: 0,
-    },
-  });
+
   const [params, setParams] = useState<TransactionsParams>({
     page: '1',
     pageSize: '20',
@@ -64,12 +58,10 @@ const Home = () => {
     firstLoad();
   }, []);
 
-  function firstLoad() {
-    fetchAPIDashboard('month');
-    fetchAPIlist(params);
-    getMe().then(res => {
-      setMe(prev => ({ ...prev, ...res }));
-    });
+  async function firstLoad() {
+    setLoading(true);
+    await Promise.all([fetchAPIDashboard('month'), fetchAPIlist(params), getMe()]);
+    setLoading(false);
   }
 
   async function fetchAPIlist(params: TransactionsParams) {
@@ -98,6 +90,7 @@ const Home = () => {
 
   const removeTransaction = async () => {
     try {
+      localStorage.clear();
       await remove();
       firstLoad();
       toastSuccess('Success reset!');
@@ -107,6 +100,7 @@ const Home = () => {
   };
   const handleLogout = async () => {
     try {
+      localStorage.clear();
       await logout();
       window.location.href = '/login';
       toastSuccess('Success reset!');
@@ -117,6 +111,7 @@ const Home = () => {
 
   return (
     <div className="m-auto min-h-full max-w-3xl space-y-4 max-sm:space-y-2">
+      {isLoading && <Loading className="fixed inset-0 bg-gray-900/20" />}
       <header className="flex items-center justify-between p-4 max-sm:p-2">
         <div className="flex items-center gap-2">
           <CircleUserRound className="size-10 text-gray-400 max-sm:size-9" />
@@ -185,7 +180,7 @@ const Home = () => {
           <Statistik data={dt.staticData} />
         </TabsContent>
         <TabsContent value="input" className="mt-4 space-y-4 max-sm:mt-2.5 max-sm:space-y-2.5">
-          <FormTransaksi onRefresh={() => handleRefresh(params.type)} />
+          <FormTransaksi onUpdateBalance={handleUpdateBalance} onRefresh={() => handleRefresh(params.type)} />
         </TabsContent>
         <TabsContent value="reports" className="mt-4 space-y-4 max-sm:mt-2.5 max-sm:space-y-2.5">
           <Filter type={reportFilters} onRefresh={handleRefresh} />

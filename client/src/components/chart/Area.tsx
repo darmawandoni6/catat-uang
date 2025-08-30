@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 
-import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { Bar, CartesianGrid, ComposedChart, Line, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
 interface Props {
   dataValue: {
@@ -10,8 +10,6 @@ interface Props {
 }
 
 const AreaComponent: FC<Props> = ({ dataValue }) => {
-  const dataKey = Object.keys(dataValue[0])[1];
-
   const numberFormatter = (value: number): string => {
     if (value < 0) {
       return `-${numberFormatter(value * -1)}`;
@@ -35,7 +33,7 @@ const AreaComponent: FC<Props> = ({ dataValue }) => {
 
   return (
     <ResponsiveContainer width="100%" height={200}>
-      <AreaChart
+      <ComposedChart
         width={500}
         height={200}
         data={dataValue}
@@ -50,9 +48,10 @@ const AreaComponent: FC<Props> = ({ dataValue }) => {
         <XAxis dataKey="name" tick={{ className: 'max-sm:text-xs' }} />
         <YAxis tickFormatter={numberFormatter} />
         <Tooltip formatter={value => separator(Number(value))} />
-
-        <Area type="monotone" dataKey={dataKey} stroke="#0891b2" fill="#0891b2" />
-      </AreaChart>
+        <Line type="monotone" dataKey="balance" stroke="#0891b280" />
+        <Bar dataKey="income" barSize={10} fill="#0891b2" />
+        <Bar dataKey="expanse" barSize={10} fill="#ec4899" />
+      </ComposedChart>
     </ResponsiveContainer>
   );
 };

@@ -43,7 +43,7 @@ const Login = () => {
               <Wallet className="h-6 w-6 text-white" />
             </div>
             <h1 className="bg-gradient-to-r from-cyan-600 to-pink-600 bg-clip-text text-2xl font-bold text-transparent">
-              Money Tracker
+              Catat Uang
             </h1>
           </div>
           <p className="text-gray-600">Masuk ke akun Anda untuk melanjutkan</p>

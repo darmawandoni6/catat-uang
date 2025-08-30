@@ -23,7 +23,7 @@ const Grafik: FC<Props> = ({ data }) => {
       </CardHeader>
       <CardContent className="px-0 pt-0 max-sm:p-0">
         {dataValue.length > 0 ? (
-          <AreaComponent dataValue={dataValue.map(([key, value]) => ({ name: key, value }))} />
+          <AreaComponent dataValue={dataValue.map(([key, value]) => ({ name: key, ...value }))} />
         ) : (
           <p className="text-muted-foreground py-6 text-center text-base max-sm:py-8 max-sm:text-xs">
             Belum ada transaksi. Tambahkan transaksi pertama Anda!

@@ -70,23 +70,30 @@ export async function getGrafikTransactions(params: Pick<TransactionsParams, "su
     where,
     select: { type: true, amount: true, date: true },
   });
-  const result: { [k: string]: number } = {};
+  const result: { [K: string]: { expanse: number; income: number; balance: number } } = {};
 
-  transactions.forEach((element) => {
+  transactions.forEach((item) => {
     const date = {
-      day: new Date(element.date).getHours(),
-      month: new Date(element.date).getDate() + 1,
-      year: new Date(element.date).getMonth(),
+      day: new Date(item.date).getHours() + 1,
+      month: new Date(item.date).getDate(),
+      year: new Date(item.date).getMonth() + 1,
     };
 
     const type = date[params.type];
-    const isIncome = element.type === "income";
     if (!result[type]) {
-      result[type] = isIncome ? element.amount : element.amount * -1;
-    } else {
-      let saldo = isIncome ? result[type] + element.amount : result[type] - element.amount;
-      result[type] = saldo;
+      result[type] = {
+        expanse: 0,
+        income: 0,
+        balance: 0,
+      };
     }
+    if (item.type === "income") {
+      result[type].income += item.amount;
+    } else if (item.type === "expense") {
+      result[type].expanse += item.amount;
+    }
+    const { income, balance } = result[type];
+    result[type].balance = income - balance;
   });
 
   return result;

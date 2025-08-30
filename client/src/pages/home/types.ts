@@ -22,7 +22,7 @@ export interface TransactionsParams {
 
 export interface DashboardTransaction {
   grafik: {
-    [K: string]: number;
+    [K: string]: { expanse: number; income: number; balance: number };
   };
   staticData: {
     totalCategory: {

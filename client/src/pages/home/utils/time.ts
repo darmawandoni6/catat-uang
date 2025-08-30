@@ -9,3 +9,9 @@ export function getGreeting() {
     return 'Selamat malam'; // 18:00–23:59 dan 00:00–05:59
   }
 }
+
+// Buat expiredAt dari createdAt + 7 hari
+export function getExpiredAt(days = 7): number {
+  const createdAt = Date.now();
+  return createdAt + days * 24 * 60 * 60 * 1000; // tambah hari dalam ms
+}
