@@ -1,6 +1,6 @@
 {
   "name": "catat-uang",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "private": "true",
   "workspaces": [
     "client",
@@ -39,7 +39,7 @@
   ],
   "author": {
     "name": "Doni Darmawan",
-    "email": "jane.smith@example.com",
+    "email": "darmawandoni6@gmail.com",
     "url": "https://darmawan.netlify.app/"
   },
   "license": "ISC",

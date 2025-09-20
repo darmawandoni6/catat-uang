@@ -1,66 +1,30 @@
-export interface TransactionPayload {
-  type: 'expense' | 'income';
-  amount: number;
-  category: string;
+export interface BucketForm {
+  name: string;
+  target?: string;
   description: string;
-  date: Date;
 }
-
-export interface TransactionForm {
-  type: 'expense' | 'income';
-  amount: string;
-  category: string;
+export interface BucketPayload {
+  id?: number;
+  name: string;
+  target?: number;
   description: string;
-  date: string;
+}
+export interface BucketList {
+  id: string;
+  name: string;
+  target: number;
+  description: string;
 }
 
-export interface TransactionsParams {
-  page: string;
-  pageSize: string;
-  type: 'day' | 'month' | 'year';
-}
-
-export interface DashboardTransaction {
-  grafik: {
-    [K: string]: { expanse: number; income: number; balance: number };
-  };
-  staticData: {
-    totalCategory: {
-      [K: string]: number;
-    };
-    totalType: {
-      [K: string]: number;
-    };
-  };
-}
-
-export interface Me {
-  me: {
-    sub: string;
-    email: string;
-    name: string;
-  };
-  summary: {
-    totalIncome: number;
-    totalExpense: number;
-    balance: number;
-  };
-}
-
-export type FilterReport = 'day' | 'month' | 'year';
-
-export interface TransactionData {
+export interface BucketAPI {
   id: number;
-  type: string;
-  amount: number;
-  category: string;
+  name: string;
   description: string;
-  date: string;
+  target: number;
+  total_balance: number;
+  total_expense: number;
+  total_income: number;
   created_at: string;
   updated_at: string;
   user_sub: string;
-}
-export interface TransactionList {
-  count: number;
-  data: TransactionData[];
 }

@@ -3,10 +3,10 @@ import { type FC, useMemo } from 'react';
 import AreaComponent from '@component/chart/Area';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@component/ui/card';
 
-import type { DashboardTransaction } from '../types';
+import type { Dashboard } from '../types';
 
 interface Props {
-  data: DashboardTransaction['grafik'];
+  data: Dashboard['grafik'];
 }
 const Grafik: FC<Props> = ({ data }) => {
   const dataValue = useMemo(() => {

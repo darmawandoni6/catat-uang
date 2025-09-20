@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { CalendarIcon, FileTextIcon, MinusCircle, PlusCircle, TagIcon } from 'lucide-react';
 import { toast } from 'react-toastify';
 
+import { useSetStateGlobal } from '@component/layout/hooks/use-context';
 import ModalDialog from '@component/pop-up';
 import { Badge } from '@component/ui/badge';
 import { Button } from '@component/ui/button';
@@ -13,11 +14,11 @@ import { Label } from '@component/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@component/ui/select';
 import { Textarea } from '@component/ui/textarea';
 import { Separator } from '@radix-ui/react-select';
+import { handleChangeCurrency, onlyNumber } from '@util/currency';
 import { cn } from '@util/tn-merge';
 
 import { createTransaksi } from '../repository/api';
-import type { TransactionForm, TransactionPayload } from '../types';
-import { handleChangeCurrency, onlyNumber } from '../utils/currency';
+import type { TransactionAPI, TransactionForm, TransactionPayload } from '../types';
 
 const incomeCategories = ['Gaji', 'Freelance', 'Investasi', 'Bonus', 'Lainnya'];
 const expenseCategories = ['Makanan', 'Transportasi', 'Belanja', 'Tagihan', 'Hiburan', 'Kesehatan', 'Lainnya'];
@@ -30,11 +31,14 @@ const defaultState: TransactionForm = {
 };
 
 interface Props {
+  id: number;
   onUpdateBalance: (type: 'income' | 'expense', value: number) => void;
-  onRefresh: VoidFunction;
+  onRefresh: (data: TransactionAPI) => void;
 }
 
-const FormTransaksi: FC<Props> = ({ onRefresh, onUpdateBalance }) => {
+const FormTransaksi: FC<Props> = ({ id, onRefresh, onUpdateBalance }) => {
+  const setState = useSetStateGlobal();
+
   const [loading, setLoading] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
   const [formData, setFormData] = useState<TransactionForm>(defaultState);
@@ -55,12 +59,24 @@ const FormTransaksi: FC<Props> = ({ onRefresh, onUpdateBalance }) => {
         category: formData.category,
         description: formData.description,
         date: new Date(formData.date),
+        bucket_id: id,
       };
-      await createTransaksi(payload);
-      onRefresh();
+      const res = await createTransaksi(payload);
+      onRefresh(res);
       onUpdateBalance(formData.type, payload.amount);
       toast.success('success create');
       setFormData(defaultState);
+      setState(prev => {
+        const summary = prev.summary;
+        if (payload.type === 'income') {
+          summary.totalIncome += payload.amount;
+        } else {
+          summary.totalExpense += payload.amount;
+        }
+        summary.balance = summary.totalIncome - summary.totalExpense;
+
+        return { ...prev, summary };
+      });
       handleOpenChange();
     } catch (error) {
       toast.error((error as Error).message);

@@ -5,7 +5,6 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import dotenv from "dotenv";
 import morgan from "morgan";
-import path from "path";
 
 import { prisma } from "@config/prisma";
 import { errorHandler, methodNotAllowed } from "@middleware/error-middleware";
@@ -57,14 +56,6 @@ app.use("/api", routesMe);
 app.use("/api", methodNotAllowed);
 app.use("/api", errorHandler);
 
-// if (process.env.NODE_ENV !== "development") {
-//   app.use(express.static(path.join(__dirname, "../client")));
-//   // fallback ke index.html (SPA routing)
-//   app.get("*", (req, res) => {
-//     // Kirim index.html untuk SPA route
-//     res.sendFile(path.join(__dirname, "../client/index.html"));
-//   });
-// }
 const PORT = 4000;
 
 app.listen(PORT, () => {

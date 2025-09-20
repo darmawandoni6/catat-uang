@@ -9,11 +9,11 @@ import type { FilterReport } from '../types';
 
 interface Props {
   type: FilterReport;
-  onRefresh: (type: FilterReport) => void;
+  onFilter: (type: FilterReport) => void;
 }
-const Filter: FC<Props> = ({ type, onRefresh }) => {
+const Filter: FC<Props> = ({ type, onFilter }) => {
   const handleFilter = (type: FilterReport) => {
-    onRefresh(type);
+    onFilter(type);
   };
 
   return (
@@ -36,7 +36,7 @@ const Filter: FC<Props> = ({ type, onRefresh }) => {
             className="py-1.5 max-sm:text-xs"
             onClick={() => handleFilter('day')}
           >
-            Hari Ini
+            Hari
           </Button>
           <Button
             variant={type === 'month' ? 'default' : 'outline'}
@@ -44,7 +44,7 @@ const Filter: FC<Props> = ({ type, onRefresh }) => {
             onClick={() => handleFilter('month')}
             className="py-1.5 max-sm:text-xs"
           >
-            Bulan Ini
+            Bulan
           </Button>
           <Button
             variant={type === 'year' ? 'default' : 'outline'}
@@ -52,7 +52,7 @@ const Filter: FC<Props> = ({ type, onRefresh }) => {
             onClick={() => handleFilter('year')}
             className="py-1.5 max-sm:text-xs"
           >
-            Tahun Ini
+            Tahun
           </Button>
         </div>
       </CardContent>

@@ -1,165 +1,101 @@
 import { prisma } from "@config/prisma";
-import { Prisma, Transactions } from "@prisma/client";
-import { endOfDay, endOfMonth, endOfYear, startOfDay, startOfMonth, startOfYear } from "@util/date";
+import { Buckets, Prisma, Transactions } from "@prisma/client";
 
-import { TransactionsParams } from "./types";
-
-export const create = async (data: Prisma.TransactionsUncheckedCreateInput) => {
-  await prisma.transactions.create({ data });
-};
-
-export const list = async (params: TransactionsParams): Promise<{ data: Transactions[]; count: number }> => {
-  const page = Number(params.page);
-  const pageSize = Number(params.pageSize);
-
-  const gte = {
-    day: startOfDay,
-    month: startOfMonth,
-    year: startOfYear,
-  };
-  const lte = {
-    day: endOfDay,
-    month: endOfMonth,
-    year: endOfYear,
-  };
-
+export async function getDashboard(params: Pick<Buckets, "user_sub" | "id">) {
   const where: Prisma.TransactionsWhereInput = {
-    date: {
-      gte: gte[params.type],
-      lte: lte[params.type],
-    },
-    user_sub: params.sub,
+    bucket_id: params.id,
+    user_sub: params.user_sub,
   };
 
-  const [data, count] = await Promise.all([
-    prisma.transactions.findMany({
-      where,
-      orderBy: {
-        date: "desc",
-      },
-      skip: (page - 1) * pageSize,
-      take: pageSize,
-    }),
-    prisma.transactions.count({ where }),
-  ]);
-
-  return { data, count };
-};
-
-export async function getGrafikTransactions(params: Pick<TransactionsParams, "sub" | "type">) {
-  const gte = {
-    day: startOfDay,
-    month: startOfMonth,
-    year: startOfYear,
-  };
-  const lte = {
-    day: endOfDay,
-    month: endOfMonth,
-    year: endOfYear,
-  };
-
-  const where: Prisma.TransactionsWhereInput = {
-    date: {
-      gt: gte[params.type],
-      lte: lte[params.type],
-    },
-    user_sub: params.sub,
-  };
-
-  const transactions = await prisma.transactions.findMany({
+  const data = await prisma.transactions.findMany({
     where,
-    select: { type: true, amount: true, date: true },
-  });
-  const result: { [K: string]: { expanse: number; income: number; balance: number } } = {};
-
-  transactions.forEach((item) => {
-    const date = {
-      day: new Date(item.date).getHours() + 1,
-      month: new Date(item.date).getDate(),
-      year: new Date(item.date).getMonth() + 1,
-    };
-
-    const type = date[params.type];
-    if (!result[type]) {
-      result[type] = {
-        expanse: 0,
-        income: 0,
-        balance: 0,
-      };
-    }
-    if (item.type === "income") {
-      result[type].income += item.amount;
-    } else if (item.type === "expense") {
-      result[type].expanse += item.amount;
-    }
-    const { income, balance } = result[type];
-    result[type].balance = income - balance;
-  });
-
-  return result;
-}
-
-export async function getStatic(params: Pick<TransactionsParams, "sub" | "type">) {
-  const gte = {
-    day: startOfDay,
-    month: startOfMonth,
-    year: startOfYear,
-  };
-  const lte = {
-    day: endOfDay,
-    month: endOfMonth,
-    year: endOfYear,
-  };
-
-  const where: Prisma.TransactionsWhereInput = {
-    date: {
-      gte: gte[params.type],
-      lte: lte[params.type],
+    orderBy: {
+      date: "desc",
     },
-    user_sub: params.sub,
-  };
-
-  const [typeTransaction, categoryTransaction] = await Promise.all([
-    prisma.transactions.groupBy({
-      by: ["type"],
-      _count: {
-        type: true,
-      },
-      where: {
-        ...where,
-        type: {
-          in: ["expense", "income"],
-        },
-      },
-    }),
-    prisma.transactions.groupBy({
-      by: ["category"],
-      _sum: {
-        amount: true,
-      },
-      where: {
-        ...where,
-        type: "expense",
-      },
-    }),
-  ]);
-
-  const totalType: { [K: string]: number } = {};
-  typeTransaction.forEach((element) => {
-    totalType[element.type] = Number(element._count.type);
   });
 
-  const totalCategory: { [K: string]: number } = {};
-  categoryTransaction.forEach((element) => {
-    totalCategory[element.category] = Number(element._sum.amount);
-  });
-
-  return {
-    totalType,
-    totalCategory,
-  };
+  return data;
 }
 
-export async function removeAll(user_sub: string) {
-  await prisma.transactions.deleteMany({ where: { user_sub } });
+export async function createTransaction(data: Prisma.TransactionsUncheckedCreateInput): Promise<Transactions> {
+  const data_bucket: Prisma.BucketsUpdateInput = {};
+
+  if (data.type === "income") {
+    data_bucket.total_income = {
+      increment: data.amount,
+    };
+    data_bucket.total_balance = {
+      increment: data.amount,
+    };
+  } else {
+    data_bucket.total_expense = {
+      decrement: data.amount,
+    };
+    data_bucket.total_balance = {
+      decrement: data.amount,
+    };
+  }
+
+  const res = await prisma.$transaction(async (trx) => {
+    const [res] = await Promise.all([
+      trx.transactions.create({ data }),
+      trx.buckets.update({
+        where: { id: Number(data.bucket_id) },
+        data: data_bucket,
+      }),
+    ]);
+    return res;
+  });
+  return res;
+}
+
+export async function listBucket(user_sub: string): Promise<Buckets[]> {
+  const buckets = await prisma.buckets.findMany({
+    where: { user_sub },
+    orderBy: [
+      {
+        created_at: "desc",
+      },
+      { target: "desc" },
+    ],
+  });
+
+  return buckets;
+}
+export async function createBucket(data: Prisma.BucketsUncheckedCreateInput): Promise<Buckets> {
+  const res = await prisma.buckets.create({ data });
+  return res;
+}
+
+export async function editBucket({
+  id,
+  user_sub,
+  ...data
+}: Pick<Buckets, "id" | "name" | "description" | "target" | "user_sub">): Promise<Buckets> {
+  const res = await prisma.buckets.update({ where: { id, user_sub }, data });
+  return res;
+}
+export async function removeBucket({ id, user_sub }: Pick<Buckets, "id" | "user_sub">): Promise<void> {
+  await prisma.$transaction(async (trx) => {
+    await Promise.all([
+      trx.buckets.delete({ where: { id, user_sub } }),
+      trx.transactions.deleteMany({ where: { bucket_id: id, user_sub } }),
+    ]);
+  });
+}
+
+export async function removeAllTransaction({ user_sub }: Pick<Buckets, "user_sub">): Promise<void> {
+  await prisma.$transaction(async (trx) => {
+    await Promise.all([
+      trx.buckets.deleteMany({ where: { user_sub } }),
+      trx.transactions.deleteMany({ where: { user_sub: user_sub } }),
+    ]);
+  });
+}
+
+export async function getBucket({ id, user_sub }: Pick<Buckets, "id" | "user_sub">) {
+  const res = await prisma.buckets.findFirst({
+    where: { id, user_sub },
+  });
+  return res;
 }
