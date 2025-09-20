@@ -4,21 +4,22 @@ import { useMemo } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@component/ui/card';
 import { formatCurrency } from '@util/currency';
 
-import type { DashboardTransaction } from '../types';
+import type { Dashboard } from '../types';
 
 const COLORS = ['#0891b2', '#ec4899', '#dc2626', '#f59e0b', '#4b5563', '#10b981', '#8b5cf6'];
 
 interface Props {
-  data: DashboardTransaction['staticData'];
+  total_category: Dashboard['total_category'];
+  total_type: Dashboard['total_type'];
 }
-const Statistik: FC<Props> = ({ data }) => {
+const Statistik: FC<Props> = ({ total_category, total_type }) => {
   const { totalType, totalCategory } = useMemo(() => {
-    const objCat = Object.entries(data.totalCategory);
+    const objCat = Object.entries(total_category);
     return {
-      totalType: { income: 0, expense: 0, ...data.totalType },
+      totalType: { income: 0, expense: 0, ...total_type },
       totalCategory: objCat.length > 0 ? objCat.map(([key, value]) => ({ name: key, value })) : [],
     };
-  }, [data]);
+  }, [total_category, total_type]);
 
   return (
     <Card>

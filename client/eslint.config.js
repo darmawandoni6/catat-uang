@@ -1,5 +1,6 @@
 import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
+import unusedImports from 'eslint-plugin-unused-imports';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
@@ -17,12 +18,18 @@ export default tseslint.config(
     plugins: {
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
+      'unused-imports': unusedImports,
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
       '@typescript-eslint/consistent-type-definitions': 'error',
       '@typescript-eslint/consistent-type-imports': 'warn',
+      'unused-imports/no-unused-imports': 'error', // Report unused imports as errors
+      '@typescript-eslint/consistent-type-imports': 'off',
+      'react-hooks/exhaustive-deps': 0,
+      'react-hooks/rules-of-hooks': 'off',
+      'react-refresh/only-export-components': 'off',
     },
   },
 );

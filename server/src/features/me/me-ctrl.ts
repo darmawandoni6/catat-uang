@@ -1,14 +1,14 @@
 import type { NextFunction, Request, Response } from "express";
 
-import { getMe, getSummary } from "./me-service";
+import { getMe } from "./me-service";
 
 export const me = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { sub } = res.locals;
 
-    const [me, summary] = await Promise.all([getMe(sub), getSummary(sub)]);
+    const me = await getMe(sub);
 
-    res.json({ me, summary });
+    res.json(me);
   } catch (error) {
     next(error);
   }

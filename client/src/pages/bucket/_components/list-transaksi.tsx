@@ -1,31 +1,17 @@
-import { type FC, useState } from 'react';
+import { type FC } from 'react';
 
 import { TrendingDown, TrendingUp } from 'lucide-react';
 
 import { Badge } from '@component/ui/badge';
-import { Button } from '@component/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@component/ui/card';
 import { formatCurrency } from '@util/currency';
 
-import type { TransactionData, TransactionsParams } from '../types';
+import type { TransactionAPI } from '../types';
 
 interface Props {
-  data: TransactionData[];
-  params: TransactionsParams;
-  loadMore: boolean;
-  onFetch: (params: TransactionsParams) => Promise<void>;
+  data: TransactionAPI[];
 }
-const ListTransaksi: FC<Props> = ({ data, loadMore, params, onFetch }) => {
-  const [loading, setLoading] = useState<boolean>(false);
-
-  const handleRefresh = async () => {
-    try {
-      setLoading(true);
-      await onFetch({ ...params, page: String(Number(params.page) + 1) });
-    } finally {
-      setLoading(false);
-    }
-  };
+const ListTransaksi: FC<Props> = ({ data }) => {
   return (
     <Card>
       <CardHeader className="pb-3">
@@ -83,11 +69,6 @@ const ListTransaksi: FC<Props> = ({ data, loadMore, params, onFetch }) => {
             ))
           )}
         </div>
-        {loadMore && (
-          <Button loading={loading} variant="outline" className="mt-4 w-full" onClick={handleRefresh}>
-            Load more...
-          </Button>
-        )}
       </CardContent>
     </Card>
   );

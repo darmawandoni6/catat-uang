@@ -50,7 +50,7 @@ const AreaComponent: FC<Props> = ({ dataValue }) => {
         <Tooltip formatter={value => separator(Number(value))} />
         <Line type="monotone" dataKey="balance" stroke="#0891b280" />
         <Bar dataKey="income" barSize={10} fill="#0891b2" />
-        <Bar dataKey="expanse" barSize={10} fill="#ec4899" />
+        <Bar dataKey="expense" barSize={10} fill="#ec4899" />
       </ComposedChart>
     </ResponsiveContainer>
   );

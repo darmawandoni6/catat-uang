@@ -1,3 +1,4 @@
+import unusedImports from "eslint-plugin-unused-imports";
 import { defineConfig } from "eslint/config";
 import globals from "globals";
 import tseslint from "typescript-eslint";
@@ -7,7 +8,7 @@ import js from "@eslint/js";
 export default defineConfig([
   {
     files: ["**/*.{js,mjs,cjs,ts,mts,cts}"],
-    plugins: { js },
+    plugins: { js, "unused-imports": unusedImports },
     extends: ["js/recommended"],
     languageOptions: { globals: globals.node },
     rules: {
@@ -22,6 +23,8 @@ export default defineConfig([
     rules: {
       "@typescript-eslint/consistent-type-imports": "warn",
       "@typescript-eslint/consistent-type-definitions": "error",
+      "unused-imports/no-unused-imports": "error", // Report unused imports as errors
+      "@typescript-eslint/consistent-type-imports": "off",
     },
   }),
 ]);

@@ -23,8 +23,28 @@ model Users {
   created_at    DateTime       @default(now())
   updated_at    DateTime       @updatedAt()
   Transactions  Transactions[]
+  Buckets       Buckets[]
 
   @@map("users")
+}
+
+model Buckets {
+  id            Int      @id @default(autoincrement()) @db.Integer
+  name          String   @db.VarChar(20)
+  description   String   @db.Text
+  target        Int      @default(0) @db.Integer
+  total_balance Int      @default(0) @db.Integer
+  total_income  Int      @default(0) @db.Integer
+  total_expense Int      @default(0) @db.Integer
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt()
+
+  user_sub String @db.VarChar(255)
+  users    Users  @relation(fields: [user_sub], references: [sub], onDelete: Cascade)
+
+  transactions Transactions[]
+
+  @@map("buckets")
 }
 
 model Transactions {
@@ -39,6 +59,9 @@ model Transactions {
 
   user_sub String @db.VarChar(255)
   users    Users  @relation(fields: [user_sub], references: [sub])
+
+  bucket_id Int?     @db.Integer
+  Buckets   Buckets? @relation(fields: [bucket_id], references: [id])
 
   @@map("transactions")
 }

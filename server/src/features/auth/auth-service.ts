@@ -4,8 +4,20 @@ import { prisma } from "@config/prisma";
 import type { Prisma, Users } from "@prisma/client";
 
 export const createUser = async (data: Prisma.UsersCreateInput): Promise<void> => {
-  await prisma.users.create({
-    data,
+  await prisma.$transaction(async (trx) => {
+    await Promise.all([
+      trx.users.create({
+        data,
+      }),
+      trx.buckets.create({
+        data: {
+          name: "Catat Uang",
+          description: "untuk mencatat pengeluaran/pemasukan",
+          target: 0,
+          user_sub: data.sub,
+        },
+      }),
+    ]);
   });
 };
 

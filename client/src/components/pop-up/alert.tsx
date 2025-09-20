@@ -14,7 +14,7 @@ interface Props {
   };
   icon?: ReactNode;
   onOpenChange: VoidFunction;
-  onReset?: () => Promise<void>;
+  onReset: () => Promise<void>;
 }
 const ModalDialog: FC<Props> = ({ open, title, description, footer, icon, onOpenChange, onReset }) => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -25,7 +25,6 @@ const ModalDialog: FC<Props> = ({ open, title, description, footer, icon, onOpen
   };
 
   const handleConfirm = async () => {
-    if (!onReset) return;
     setLoading(true);
     try {
       await onReset();
