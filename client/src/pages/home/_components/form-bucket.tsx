@@ -59,7 +59,7 @@ const DialogFormBucket: FC<Props> = ({ open, data, onOpenChange, onRefresh }) =>
         payload.id = data.id;
         res = await updateBucket(payload);
       } else {
-        await addBucket(payload);
+        res = await addBucket(payload);
       }
 
       toastSuccess('success create bucket');

@@ -11,6 +11,7 @@ import { toastError } from '@util/toast';
 import Bucket from './_components/bucket';
 import DialogFormBucket from './_components/form-bucket';
 import { fetchMe, getBucket } from './repository/api';
+import { BucketAPI } from './types';
 
 const Home = () => {
   const state = useStateGlobal();
@@ -51,6 +52,9 @@ const Home = () => {
   }
 
   const handleBucket = () => setOpenBucket(prev => !prev);
+  const handleRefresh = (data: BucketAPI) => {
+    setState(prev => ({ ...prev, buckets: [...prev.buckets, data] }));
+  };
 
   return (
     <>
@@ -82,7 +86,7 @@ const Home = () => {
         </Button>
       </div>
 
-      <DialogFormBucket open={openBucket} onOpenChange={handleBucket} />
+      <DialogFormBucket open={openBucket} onOpenChange={handleBucket} onRefresh={handleRefresh} />
     </>
   );
 };

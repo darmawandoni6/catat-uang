@@ -15,5 +15,5 @@ export const bucketsPayload = Joi.object<Buckets>({
   id: Joi.number(),
   name: Joi.string().min(1).max(20).required(),
   description: Joi.string().required(),
-  target: Joi.number().required().default(0),
+  target: Joi.number().default(0),
 });

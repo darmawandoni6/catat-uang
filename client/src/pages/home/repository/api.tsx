@@ -8,7 +8,8 @@ export async function getBucket(): Promise<BucketAPI[]> {
   return res.data;
 }
 export async function addBucket(payload: BucketPayload) {
-  await http.post('/bucket', payload);
+  const res = await http.post<BucketAPI>('/bucket', payload);
+  return res.data;
 }
 
 export async function updateBucket(payload: BucketPayload) {

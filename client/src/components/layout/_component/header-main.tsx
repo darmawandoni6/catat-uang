@@ -7,19 +7,29 @@ import ModalDialog from '@component/pop-up/alert';
 import { Button } from '@component/ui/button';
 import { toastError } from '@util/toast';
 
-import { logout } from '../repository/api';
+import { initialState, useSetStateGlobal } from '../hooks/use-context';
+import { logout, removeTransaction } from '../repository/api';
 import type { InitialState } from '../types';
 
 interface Props {
   me: InitialState['me'];
 }
 const HeaderMain: FC<Props> = ({ me }) => {
+  const setState = useSetStateGlobal();
+
   const [open, setOpen] = useState<'reset' | 'logout' | ''>('');
 
-  const removeTransaction = async () => {
+  const handleRemoveTransaction = async () => {
     try {
       await removeTransaction();
       toastError('success reset');
+      setState(prev => ({
+        ...prev,
+        buckets: initialState.buckets,
+        bucket: initialState.bucket,
+        summary: initialState.summary,
+        total_summary: initialState.total_summary,
+      }));
       setOpen('');
     } catch (error) {
       toastError(error);
@@ -57,7 +67,7 @@ const HeaderMain: FC<Props> = ({ me }) => {
       <ModalDialog
         open={open === 'reset'}
         onOpenChange={() => setOpen('')}
-        onReset={removeTransaction}
+        onReset={handleRemoveTransaction}
         icon={<AlertTriangle className="m-auto mb-6 size-10 text-orange-300" />}
         title="Reset Transaksi"
         description="Kamu yakin menghapus semua transaksi ?"
